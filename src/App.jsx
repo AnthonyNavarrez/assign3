@@ -15,20 +15,86 @@ function Square({ value, onSquareClick }) {
 function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
+  const [moveCount, setMoveCount] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
+  function isAdjacent(i, j) {
+    const adjacencyMap = {
+      0: [1, 3, 4],
+      1: [0, 2, 3, 4, 5],
+      2: [1, 4, 5],
+      3: [0, 1, 4, 6, 7],
+      4: [0, 1, 2, 3, 5, 6, 7, 8],
+      5: [1, 2, 4, 7, 8],
+      6: [3, 4, 7],
+      7: [3, 4, 5, 6, 8],
+      8: [4, 5, 7]
+    };
+    return adjacencyMap[i].includes(j);
+  }
+
+  function hasCenter() {
+    return squares[4] === (xIsNext ? 'X' : 'O');
+  }
+
+  function winsGame(nextSquares) {
+    return calculateWinner(nextSquares) === (xIsNext ? 'X' : 'O');
+  }
+
+  function handlePlacement(i) {
+    if (calculateWinner(squares)) return false;
+    if (squares[i]) return false;
+    const nextSquares = squares.slice();
+    nextSquares[i] = xIsNext ? 'X' : 'O';
+    setSquares(nextSquares);
+    setMoveCount(moveCount + 1);
+    return true;
+  }
+
+  function handleSelection(i) {
+    if (squares[i] === (xIsNext ? 'X' : 'O')) {
+      setSelectedIndex(i);
+    }
+  }
+
+  function handleMovement(i) {
+    if (calculateWinner(squares)) {
+    setSelectedIndex(null);
+    return false;
+  }
+    if (!(squares[i] === null && isAdjacent(selectedIndex, i))) {
+      setSelectedIndex(null);
+      return false;
+    }
+ 
+    const nextSquares = squares.slice();
+    nextSquares[selectedIndex] = null;
+    nextSquares[i] = xIsNext ? 'X' : 'O';
+ 
+    if (hasCenter()) { 
+      if (selectedIndex != 4 && !(winsGame(nextSquares))) {
+        setSelectedIndex(null);
+        return false;
+      }
+    }
+ 
+    setSquares(nextSquares);
+    setSelectedIndex(null);
+    return true;
+  }
 
   function handleClick(i) {
-    if (squares[i] || calculateWinner(squares)) {
-    return;
-  }
-    const nextSquares = squares.slice();
-    if (xIsNext) {
-      nextSquares[i] = "X";
+    if (moveCount < 6) {
+      if (handlePlacement(i)) {
+        setXIsNext(!xIsNext);
+      }
+    } else if (selectedIndex === null) {
+      handleSelection(i);
     } else {
-      nextSquares[i] = "O";
+      if (handleMovement(i)) {
+        setXIsNext(!xIsNext);
+      }
     }
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext);
   }
 
   const winner = calculateWinner(squares);
@@ -84,8 +150,6 @@ function calculateWinner(squares) {
 export default function App() {
 
   return (
-    <>
-      <Board></Board>
-    </>
+      <Board />
   )
 }

@@ -1,0 +1,21 @@
+Added useState hook for moveCount (initialize to 0) 
+Added useState hook for selectedIndex (initialize to null) 
+   
+Created isAdjacent(i,j) function
+- Created adjacency map for all 9 squares
+- ex: 0: [1, 3, 4] (for all 0-8 squares)
+
+Created hasCenter() to check if current player occupies center square
+
+Created winsGame(nextSquares) to check if a move results in a win
+
+Restructured handleClick using helper functions
+- handlePlacement(i): Places piece on empty square during first 6 moves
+- handleSelection(i): Selects a piece to move during movement phase
+- handleMovement(i): Moves selected piece to adjacent empty square, center check: next move should move center piece or win
+   
+Updated handleClick structure
+- If moveCount < 6: run original tic-tac-toe placement 
+- Else if selectedIndex === null: run selection function
+- Else: run movement function
+- change xIsNext when moves succeed
