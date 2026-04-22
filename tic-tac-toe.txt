@@ -1,0 +1,53 @@
+Create Square component:
+- contains a button
+
+Created Board component:
+- has 3 rows of 3 square components
+
+Updated Square component to read value prop passed in from the Board
+- board calls component and passes value through value="x" attribute
+
+define handelClick function
+- console.log('click!') for now
+add onClick event to square, pass it handleClick
+
+Used useState hook to create state variable value and setter function setValue 
+- initialized to null
+- square component calls in Board component no longer pass values, 
+
+Created an array with nine elements
+- set each of them to null
+- square component calls in Board component now pass value = square[i]
+- square component now accepts value prop
+
+added onClick event in square component passed in by onSquareClick
+- made square component accept onSquareClick as prop
+
+define handleClick function in Board component
+- updates squares array so that index pessed gets value X
+- define an arrow function in each call of squre in Board component
+- calls handleClick pasing it its index value
+
+define useState hook xIsNext
+- default set to true 
+
+Updated handelClick function
+- introduced if statementt:
+- if xIsNext then nextSquare[i] gets value X
+- if xIsNext then nextSquare[i] gets value O
+called setSquares to update array with the the array containg new value it just got
+- made xIsNext the opposite
+
+added a check in handelClick to see if current square alredy has a value
+- if it does, immediatly return
+
+created a function CalculateWinner
+- accepts squares array as prop
+- declare 2d array, all the possible line combinations that win
+- for loop to check if squares has a wining combinations
+- update check in handle click, if square has a value OR calculateWinner return true than immediately return
+
+Created variable winner that is assigned output of calculateWinner
+- if winner is true then display winning message
+- else display next players turn wtih ternary statment and xIsNext value
+
