@@ -155,6 +155,54 @@ class TestChorusLapilli(unittest.TestCase):
         tiles[0].click()
         self.assertTileIs(tiles[0], self.SYMBOL_X)
 
+    def test_two_click_movement_works(self):
+        '''Check if two-click movement works after 6 moves (placement phase ends).First click selects piece, second click moves it to adjacent square.'''
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+        
+        tiles[0].click()
+        tiles[4].click()
+        tiles[1].click()
+        tiles[5].click()
+        tiles[6].click()
+        tiles[7].click()
+        
+        tiles[0].click()
+        tiles[3].click()
+
+        self.assertTileIs(tiles[0], self.SYMBOL_BLANK)
+        self.assertTileIs(tiles[3], self.SYMBOL_X) 
+
+    def test_invalid_move_rejected(self):
+        '''Check if invalid moves (non-adjacent) are rejected and selection resets.'''
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+        
+        tiles[0].click()
+        tiles[2].click()
+        tiles[1].click()
+        tiles[5].click()
+        tiles[3].click()
+        tiles[7].click()
+
+        tiles[0].click()
+        tiles[8].click()
+        
+        self.assertTileIs(tiles[0], self.SYMBOL_X)
+        self.assertTileIs(tiles[8], self.SYMBOL_BLANK)
+
+    def test_win_blocks_further_moves(self):
+        '''Check that no more moves are allowed after a player wins.'''
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+
+        tiles[0].click()
+        tiles[1].click()
+        tiles[4].click()
+        tiles[2].click()
+        tiles[8].click()
+
+        tiles[3].click()
+        
+        self.assertTileIs(tiles[3], self.SYMBOL_BLANK)
+
 
 # ================= [DO NOT MAKE ANY CHANGES BELOW THIS LINE] =================
 
